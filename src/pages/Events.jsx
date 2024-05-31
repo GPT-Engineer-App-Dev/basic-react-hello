@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Box, Button, Container, FormControl, FormLabel, Input, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
 import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from "../integrations/supabase/index.js";
 
@@ -69,7 +70,7 @@ const Events = () => {
           <Tbody>
             {events.map((event) => (
               <Tr key={event.id}>
-                <Td>{event.name}</Td>
+                <Td><Link to={`/events/${event.id}`}>{event.name}</Link></Td>
                 <Td>{event.date}</Td>
                 <Td>{event.description}</Td>
                 <Td>{event.venue_id}</Td>
