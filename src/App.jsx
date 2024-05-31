@@ -4,6 +4,7 @@ import Index from "./pages/Index.jsx";
 import Events from "./pages/Events.jsx";
 import Navbar from "./components/Navbar.jsx";
 import EventDetails from "./pages/EventDetails.jsx";
+import Venues from "./pages/Venues.jsx";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Index />} />
           <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/venues" element={<Venues />} />
         </Routes>
       </Router>
     </SupabaseProvider>
