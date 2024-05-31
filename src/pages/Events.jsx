@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Container, FormControl, FormLabel, Input, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
-import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from "../integrations/supabase/index.js";
+import { Box, Button, Container, FormControl, FormLabel, Input, Select, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useVenues } from "../integrations/supabase/index.js";
 
 const Events = () => {
   const { data: events, isLoading, isError } = useEvents();
+  const { data: venues } = useVenues();
   const addEvent = useAddEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
@@ -51,8 +52,14 @@ const Events = () => {
             <Input name="description" value={newEvent.description} onChange={handleInputChange} />
           </FormControl>
           <FormControl>
-            <FormLabel>Venue ID</FormLabel>
-            <Input name="venue_id" value={newEvent.venue_id} onChange={handleInputChange} />
+            <FormLabel>Venue</FormLabel>
+            <Select name="venue_id" value={newEvent.venue_id} onChange={handleInputChange}>
+              {venues.map((venue) => (
+                <option key={venue.id} value={venue.id}>
+                  {venue.name}
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <Button mt={4} onClick={handleAddEvent}>Add Event</Button>
         </Box>
@@ -98,8 +105,14 @@ const Events = () => {
               <Input name="description" value={editingEvent.description} onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })} />
             </FormControl>
             <FormControl>
-              <FormLabel>Venue ID</FormLabel>
-              <Input name="venue_id" value={editingEvent.venue_id} onChange={(e) => setEditingEvent({ ...editingEvent, venue_id: e.target.value })} />
+              <FormLabel>Venue</FormLabel>
+              <Select name="venue_id" value={editingEvent.venue_id} onChange={(e) => setEditingEvent({ ...editingEvent, venue_id: e.target.value })}>
+                {venues.map((venue) => (
+                  <option key={venue.id} value={venue.id}>
+                    {venue.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             <Button mt={4} onClick={() => handleUpdateEvent(editingEvent)}>Update Event</Button>
           </Box>
