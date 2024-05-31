@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Box, Button, Container, FormControl, FormLabel, Input, Text, VStack } from "@chakra-ui/react";
-import { useEvent, useComments, useAddComment, useUpdateEvent } from "../integrations/supabase/index.js";
+import { useEvent, useComments, useAddComment } from "../integrations/supabase/index.js";
 import { useState } from "react";
 
 const EventDetails = () => {
@@ -8,17 +8,12 @@ const EventDetails = () => {
   const { data: event, isLoading: eventLoading, isError: eventError } = useEvent(id);
   const { data: comments, isLoading: commentsLoading, isError: commentsError } = useComments(id);
   const addComment = useAddComment();
-  const updateEvent = useUpdateEvent();
 
   const [newComment, setNewComment] = useState("");
 
   const handleAddComment = () => {
     addComment.mutate({ content: newComment, event_id: id });
     setNewComment("");
-  };
-
-  const togglePinEvent = () => {
-    updateEvent.mutate({ ...event, is_pinned: !event.is_pinned });
   };
 
   if (eventLoading || commentsLoading) return <div>Loading...</div>;
@@ -31,7 +26,6 @@ const EventDetails = () => {
           <Text fontSize="2xl">{event.name}</Text>
           <Text>{event.date}</Text>
           <Text>{event.description}</Text>
-          <Button mt={2} onClick={togglePinEvent}>{event.is_pinned ? "Unpin" : "Pin"}</Button>
         </Box>
 
         <Box w="100%">

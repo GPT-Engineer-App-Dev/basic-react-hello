@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Container, FormControl, FormLabel, Input, Select, Table, Tbody, Td, Th, Thead, Tr, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, Container, FormControl, FormLabel, Input, Select, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
 import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useVenues } from "../integrations/supabase/index.js";
 
 const Events = () => {
@@ -12,13 +12,6 @@ const Events = () => {
 
   const [newEvent, setNewEvent] = useState({ name: "", date: "", description: "", venue_id: 0, is_pinned: false });
   const [editingEvent, setEditingEvent] = useState(null);
-  const [pinnedEvents, setPinnedEvents] = useState([]);
-
-  useEffect(() => {
-    if (events) {
-      setPinnedEvents(events.filter(event => event.is_pinned));
-    }
-  }, [events]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,10 +30,6 @@ const Events = () => {
 
   const handleDeleteEvent = (id) => {
     deleteEvent.mutate(id);
-  };
-
-  const togglePinEvent = (event) => {
-    updateEvent.mutate({ ...event, is_pinned: !event.is_pinned });
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -87,7 +76,7 @@ const Events = () => {
           </Thead>
           <Tbody>
             {events.map((event) => (
-              <Tr key={event.id} style={{ backgroundColor: event.is_pinned ? "#f0f8ff" : "transparent" }}>
+              <Tr key={event.id}>
                 <Td><Link to={`/events/${event.id}`}>{event.name}</Link></Td>
                 <Td>{event.date}</Td>
                 <Td>{event.description}</Td>
@@ -95,7 +84,6 @@ const Events = () => {
                 <Td>
                   <Button size="sm" onClick={() => setEditingEvent(event)}>Edit</Button>
                   <Button size="sm" ml={2} onClick={() => handleDeleteEvent(event.id)}>Delete</Button>
-                  <Button size="sm" ml={2} onClick={() => togglePinEvent(event)}>{event.is_pinned ? "Unpin" : "Pin"}</Button>
                 </Td>
               </Tr>
             ))}
@@ -129,30 +117,6 @@ const Events = () => {
             <Button mt={4} onClick={() => handleUpdateEvent(editingEvent)}>Update Event</Button>
           </Box>
         )}
-
-        <Box w="100%">
-          <Text fontSize="xl">Pinned Events</Text>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Name</Th>
-                <Th>Date</Th>
-                <Th>Description</Th>
-                <Th>Venue ID</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {pinnedEvents.map((event) => (
-                <Tr key={event.id}>
-                  <Td><Link to={`/events/${event.id}`}>{event.name}</Link></Td>
-                  <Td>{event.date}</Td>
-                  <Td>{event.description}</Td>
-                  <Td>{event.venue_id}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
       </VStack>
     </Container>
   );
